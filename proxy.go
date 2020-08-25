@@ -53,16 +53,16 @@ func ProxyHTTP(host, method string, header http.Header, body []byte) (headerD ht
 }
 
 func Writer(w io.Writer, header http.Header, body []byte) {
-	_, _ = w.Write([]byte("HTTP/1.1 200 OK\r\n"))
+	_, _ = w.Write([]byte("HTTP/1.1 200 OK\n"))
 	header["Content-Length"] = []string{strconv.Itoa(len(body))}
 	for k, hs := range header {
 		for _, h := range hs {
 			if h == "keep-alive" {
 				continue
 			}
-			_, _ = w.Write([]byte(fmt.Sprintf("%s: %s\r\n", k, h)))
+			_, _ = w.Write([]byte(fmt.Sprintf("%s: %s\n", k, h)))
 		}
 	}
-	_, _ = w.Write([]byte("\r\n"))
+	_, _ = w.Write([]byte("\n"))
 	_, _ = w.Write(body)
 }

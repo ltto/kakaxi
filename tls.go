@@ -10,7 +10,7 @@ import (
 )
 
 func OnTLS(accept net.Conn, host string) (err error) {
-	_, _ = accept.Write([]byte("HTTP/1.1 200 Connection Established\r\n\r\n"))
+	_, _ = accept.Write([]byte("HTTP/1.1 200 Connection Established\n\n"))
 	config := tls.Config{GetCertificate: TLSHandshake}
 	conn := tls.Server(accept, &config)
 	if err = conn.Handshake(); err != nil {
