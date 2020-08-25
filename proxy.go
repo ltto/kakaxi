@@ -1,6 +1,7 @@
 package kakaxi
 
 import (
+	"bytes"
 	"compress/gzip"
 	"compress/zlib"
 	"fmt"
@@ -11,9 +12,10 @@ import (
 	"strings"
 )
 
-func ProxyHTTP(host, method string, header http.Header) (headerD map[string][]string, bodyB []byte, err error) {
+func ProxyHTTP(host, method string, header http.Header, body []byte) (headerD map[string][]string, bodyB []byte, err error) {
 	fmt.Println("host-----:", host)
-	request, err := http.NewRequest(method, host, nil)
+
+	request, err := http.NewRequest(method, host, bytes.NewBuffer(body))
 	if err != nil {
 		panic(err)
 	}

@@ -6,11 +6,11 @@ import (
 )
 
 func OnTCP(conn net.Conn) error {
-	header, host, method := DumpRequest(conn)
+	header, body, host, method := DumpRequest(conn)
 	if method == http.MethodConnect {
 		return OnTLS(conn, host)
 	}
-	doHeader, bodyB, err := ProxyHTTP(host, method, header)
+	doHeader, bodyB, err := ProxyHTTP(host, method, header, body)
 	if err != nil {
 		return err
 	}

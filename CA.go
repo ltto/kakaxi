@@ -60,8 +60,8 @@ func init() {
 }
 
 const (
-	PEM_HEADER_PRIVATE_KEY = "RSA PRIVATE KEY"
-	PEM_HEADER_CERTIFICATE = "CERTIFICATE"
+	PemHeaderPrivateKey  = "RSA PRIVATE KEY"
+	PemHeaderCertificate = "CERTIFICATE"
 )
 
 func GeneratePK(bits int) (rsaKey *rsa.PrivateKey, err error) {
@@ -74,7 +74,7 @@ func PKToFile(rsaKey *rsa.PrivateKey, filename string) (err error) {
 		return fmt.Errorf("failed to open %s for writing: %s", filename, err)
 	}
 	defer keyOut.Close()
-	if err := pem.Encode(keyOut, &pem.Block{Type: PEM_HEADER_PRIVATE_KEY, Bytes: x509.MarshalPKCS1PrivateKey(rsaKey)}); err != nil {
+	if err := pem.Encode(keyOut, &pem.Block{Type: PemHeaderPrivateKey, Bytes: x509.MarshalPKCS1PrivateKey(rsaKey)}); err != nil {
 		return fmt.Errorf("unable to PEM encode private key: %s", err)
 	}
 	return
@@ -119,5 +119,5 @@ func CAToFile(filename string, certByte []byte) (err error) {
 		return fmt.Errorf("failed to open %s for writing: %s", filename, err)
 	}
 	defer certOut.Close()
-	return pem.Encode(certOut, &pem.Block{Type: PEM_HEADER_CERTIFICATE, Bytes: certByte})
+	return pem.Encode(certOut, &pem.Block{Type: PemHeaderCertificate, Bytes: certByte})
 }

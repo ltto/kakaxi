@@ -16,8 +16,8 @@ func OnTLS(accept net.Conn, host string) (err error) {
 	if err = conn.Handshake(); err != nil {
 		return err
 	}
-	header, paths, method := DumpRequest(conn)
-	doHeader, bodyB, err := ProxyHTTP("https://"+host+paths, method, header)
+	header, body, paths, method := DumpRequest(conn)
+	doHeader, bodyB, err := ProxyHTTP("https://"+host+paths, method, header, body)
 	if err != nil {
 		return err
 	}
