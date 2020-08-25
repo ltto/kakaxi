@@ -12,8 +12,11 @@ import (
 	"strings"
 )
 
-func ProxyHTTP(host, method string, header http.Header, body []byte) (headerD map[string][]string, bodyB []byte, err error) {
+func ProxyHTTP(host, method string, header http.Header, body []byte) (headerD http.Header, bodyB []byte, err error) {
 	fmt.Println("host-----:", host)
+	if OnRequest != nil {
+		OnRequest(header, host, body)
+	}
 
 	request, err := http.NewRequest(method, host, bytes.NewBuffer(body))
 	if err != nil {
@@ -43,6 +46,9 @@ func ProxyHTTP(host, method string, header http.Header, body []byte) (headerD ma
 		}
 	}
 	bodyB, err = ioutil.ReadAll(bodyR)
+	if OnResponse != nil {
+		OnResponse(headerD, host, bodyB)
+	}
 	return
 }
 
