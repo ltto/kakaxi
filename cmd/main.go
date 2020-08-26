@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net"
 
@@ -8,7 +9,12 @@ import (
 )
 
 func main() {
-	listen, err := net.Listen("tcp", ":8081")
+	port := *flag.Int("p", 8081, "端口")
+	host := *flag.String("h", "", "绑定主机地址")
+	flag.Parse()
+	sprintf := fmt.Sprintf("%s:%d", host, port)
+	fmt.Println("监听", sprintf)
+	listen, err := net.Listen("tcp", sprintf)
 	if err != nil {
 		panic(err)
 	}
