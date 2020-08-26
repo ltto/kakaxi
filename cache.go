@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"net/url"
 	"os"
 	"path"
 	"strings"
 )
 
-func SaveCache(host string, header map[string][]string, body []byte) {
+func SaveCache(host string, header http.Header, body []byte) {
 	var hostURL, _ = url.Parse(host)
 	if hostURL.Path == "" {
 		return

@@ -1,27 +1,33 @@
 package kakaxi
 
 import (
+	"bufio"
 	"bytes"
 	"crypto/rand"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/pem"
 	"net"
+	"net/http"
 )
 
-func OnTLS(accept net.Conn, host string) (err error) {
+func OnTLS(accept net.Conn) (err error) {
 	_, _ = accept.Write([]byte("HTTP/1.1 200 Connection Established\n\n"))
 	config := tls.Config{GetCertificate: TLSHandshake}
 	conn := tls.Server(accept, &config)
 	if err = conn.Handshake(); err != nil {
 		return err
 	}
-	header, body, paths, method := DumpRequest(conn)
-	doHeader, bodyB, err := ProxyHTTP("https://"+host+paths, method, header, body)
+
+	request, err := http.ReadRequest(bufio.NewReader(conn))
 	if err != nil {
 		return err
 	}
-	Writer(conn, doHeader, bodyB)
+	doHeader, resp, bodyB, err := ProxyHTTP(*request)
+	if err != nil {
+		return err
+	}
+	Writer(conn, doHeader, resp, bodyB)
 	conn.Close()
 	return
 }

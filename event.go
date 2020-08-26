@@ -2,5 +2,5 @@ package kakaxi
 
 import "net/http"
 
-var OnRequest = func(header http.Header, host string, body []byte) {}
-var OnResponse = func(header http.Header, host string, body []byte) {}
+var OnRequest = func(r http.Request) {}
+var OnResponse = func(r http.Request, header http.Header, body []byte) {}
