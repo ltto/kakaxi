@@ -19,7 +19,7 @@ func main() {
 		}
 		go func() {
 			if err = kakaxi.OnTCP(accept); err != nil {
-				fmt.Println("wocao ",err)
+				fmt.Println("wocao ", err)
 			}
 		}()
 	}

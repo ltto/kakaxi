@@ -15,11 +15,11 @@ func OnTCP(conn net.Conn) error {
 		return OnTLS(conn)
 	}
 
-	doHeader, resp, bodyB, err := ProxyHTTP(*request)
+	reps, err := ProxyHTTP(CopyRequest(request))
 	if err != nil {
 		return err
 	}
-	Writer(conn, doHeader, resp, bodyB)
-	conn.Close()
+	Writer(conn, reps)
+	_ = conn.Close()
 	return nil
 }

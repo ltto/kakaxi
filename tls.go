@@ -23,12 +23,12 @@ func OnTLS(accept net.Conn) (err error) {
 	if err != nil {
 		return err
 	}
-	doHeader, resp, bodyB, err := ProxyHTTP(*request)
+	resp, err := ProxyHTTP(CopyRequest(request))
 	if err != nil {
 		return err
 	}
-	Writer(conn, doHeader, resp, bodyB)
-	conn.Close()
+	Writer(conn, resp)
+	_ = conn.Close()
 	return
 }
 
