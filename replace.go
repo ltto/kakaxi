@@ -2,21 +2,20 @@ package kakaxi
 
 import (
 	"bytes"
-	"fmt"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ReplaceHTML(body []byte, prefix string) (bbody []byte, err error) {
+func ReplaceHTML(body []byte, prefixs ...string) (bbody []byte, err error) {
 	buffer := bytes.NewBuffer(body)
 	doc, err := goquery.NewDocumentFromReader(buffer)
 	if err != nil {
 		return body, err
 	}
-	split(doc, "src", prefix)
-	split(doc, "href", prefix)
-	split(doc, "actions", prefix)
+	split(doc, "src", prefixs)
+	split(doc, "href", prefixs)
+	split(doc, "actions", prefixs)
 	html, err := doc.Html()
 	if err != nil {
 		return body, err
@@ -25,17 +24,17 @@ func ReplaceHTML(body []byte, prefix string) (bbody []byte, err error) {
 	return
 }
 
-func split(doc *goquery.Document, attr, prefix string) {
+func split(doc *goquery.Document, attr string, prefixs []string) {
 	if attr == "" {
 		return
 	}
 	doc.Find("[" + attr + "^=http]").Each(func(i int, s *goquery.Selection) {
 		gets, _ := s.Attr(attr)
-		if strings.Index(gets, prefix) == 0 {
-			val := gets[len(prefix):]
-			fmt.Println(attr, val)
-			s.SetAttr(attr, val)
-			fmt.Println(attr, val)
+		for _, prefix := range prefixs {
+			if strings.Index(gets, prefix) == 0 {
+				val := gets[len(prefix):]
+				s.SetAttr(attr, val)
+			}
 		}
 	})
 }

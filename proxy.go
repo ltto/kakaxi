@@ -10,6 +10,7 @@ func ProxyHTTP(req Request) (resp Response, err error) {
 	if resp, err = doProxyHTTP(req); err != nil {
 		return
 	}
+	go OnResponse(req, resp)
 	return
 }
 func doProxyHTTP(r Request) (resp Response, err error) {

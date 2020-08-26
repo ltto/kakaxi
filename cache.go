@@ -11,11 +11,7 @@ import (
 	"strings"
 )
 
-func SaveCache(host string, header http.Header, body []byte) {
-	var hostURL, _ = url.Parse(host)
-	if hostURL.Path == "" {
-		return
-	}
+func SaveCache(URL url.URL, header http.Header, body []byte) {
 	var html = false
 	if hs, ok := header["Content-Type"]; ok {
 		for _, h := range hs {
@@ -24,8 +20,14 @@ func SaveCache(host string, header http.Header, body []byte) {
 			}
 		}
 	}
+	host := URL.Host + URL.Path
+
 	if html {
-		body, _ = ReplaceHTML(body, "http://demo.qzhai.net/cell/")
+		if host[len(host)-1] != '/' {
+			body, _ = ReplaceHTML(body, "http://"+host+"/", "http://"+host+"/")
+		} else {
+			body, _ = ReplaceHTML(body, "http://"+host, "http://"+host)
+		}
 	}
 	if path.Ext(host) == "" {
 		host = host + "/index.html"
