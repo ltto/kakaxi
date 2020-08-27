@@ -33,5 +33,5 @@ func SaveCache(URL url.URL, header http.Header, body []byte) {
 	_ = ioutil.WriteFile(host, body, 0777)
 	marshal, _ := json.Marshal(header)
 	_ = ioutil.WriteFile(host+".meta.json", marshal, 0777)
-	fmt.Println("数据大小:", len(body), "抓取连接:", host)
+	fmt.Println("数据大小:", len(body), "抓取连接:", URL.Scheme+"://"+URL.Host+URL.Path)
 }
