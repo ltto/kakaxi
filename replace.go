@@ -33,6 +33,9 @@ func split(doc *goquery.Document, attr string, prefixs []string) {
 		for _, prefix := range prefixs {
 			if strings.Index(gets, prefix) == 0 {
 				val := gets[len(prefix):]
+				if len(val) != 0 && val[0] == '/' {
+					val = val[1:]
+				}
 				s.SetAttr(attr, val)
 			}
 		}

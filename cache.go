@@ -23,11 +23,7 @@ func SaveCache(URL url.URL, header http.Header, body []byte) {
 	host := URL.Host + URL.Path
 
 	if html {
-		if host[len(host)-1] != '/' {
-			body, _ = ReplaceHTML(body, "http://"+host+"/", "http://"+host+"/")
-		} else {
-			body, _ = ReplaceHTML(body, "http://"+host, "http://"+host)
-		}
+		body, _ = ReplaceHTML(body, "http://"+host, "http://"+host)
 	}
 	if path.Ext(host) == "" {
 		host = host + "/index.html"
