@@ -2,6 +2,7 @@ package kakaxi
 
 import (
 	"bufio"
+	"log"
 	"net"
 	"net/http"
 )
@@ -9,6 +10,7 @@ import (
 func OnTCP(conn net.Conn) error {
 	request, err := http.ReadRequest(bufio.NewReader(conn))
 	if err != nil {
+		log.Printf("http.ReadRequest err:%v\n", err)
 		return err
 	}
 	if request.Method == http.MethodConnect {

@@ -3,10 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"net"
 
 	"github.com/ltto/kakaxi"
 )
+
+func init() {
+	log.SetFlags(log.Llongfile | log.LstdFlags)
+}
 
 func main() {
 	port := *flag.Int("p", 8081, "端口")
@@ -24,9 +29,7 @@ func main() {
 			continue
 		}
 		go func() {
-			if err = kakaxi.OnTCP(accept); err != nil {
-				fmt.Println("wocao ", err)
-			}
+			kakaxi.OnTCP(accept)
 		}()
 	}
 }
