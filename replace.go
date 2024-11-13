@@ -30,7 +30,15 @@ func ReplaceHTML(body []byte, currentPath string, currentHost string) (bbody []b
 				return target
 			}
 		}
-		return getRelativePath(currentPath, target)
+		if target == "" {
+			target = "/"
+		}
+		relativePath := getRelativePath(currentPath, target)
+		switch relativePath {
+		case ".", "/", "\\":
+			return "#"
+		}
+		return relativePath
 	}
 
 	// 执行替换
