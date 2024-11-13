@@ -53,7 +53,9 @@ var OnResponse = func(r Request, resp Response, doCache bool, savePath, host, ho
 		}
 	}
 	if doCache {
-		SaveCache(savePath, host, hostPath, header, body)
-		fmt.Println("数据大小:", FormatBytes(float64(len(body))), "抓取连接:", r.URL.Scheme+"://"+r.URL.Host+r.URL.Path)
+		if resp.StatusCode < 400 {
+			SaveCache(savePath, host, hostPath, header, body)
+			fmt.Println("数据大小:", FormatBytes(float64(len(body))), "抓取连接:", r.URL.Scheme+"://"+r.URL.Host+r.URL.Path)
+		}
 	}
 }
