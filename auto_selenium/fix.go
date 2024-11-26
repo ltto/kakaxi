@@ -42,6 +42,7 @@ func main() {
 		class := paramsParts[1]
 		GetBody(fmt.Sprintf("https://angelscript.hazelight.se/api/classes/C/%s-Summary.js", class))         //-Summary.js
 		GetBody(fmt.Sprintf("https://angelscript.hazelight.se/api/classes/C/%s-SummaryToolTips.js", class)) //-SummaryToolTips.js
+		GetBody(fmt.Sprintf("https://angelscript.hazelight.se/api/classes/C/%s-ToolTips.js", class))        //-ToolTips.js
 		GetBody(fmt.Sprintf("https://angelscript.hazelight.se/api/classes/C/%s.html", class))               //.html
 	}
 	err = os.WriteFile("dao/fix.sh", []byte(fixList), 0777)

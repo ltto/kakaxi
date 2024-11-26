@@ -56,30 +56,7 @@ func main() {
 		panic(err)
 	}
 	var links = []string{
-		"https://angelscript.hazelight.se/",
-		"https://angelscript.hazelight.se/getting-started/installation/",
-		"https://angelscript.hazelight.se/getting-started/introduction/",
-		"https://angelscript.hazelight.se/scripting/functions-and-events/",
-		"https://angelscript.hazelight.se/scripting/properties-and-accessors/",
-		"https://angelscript.hazelight.se/scripting/actors-components/",
-		"https://angelscript.hazelight.se/scripting/function-libraries/",
-		"https://angelscript.hazelight.se/scripting/fname-literals/",
-		"https://angelscript.hazelight.se/scripting/format-strings/",
-		"https://angelscript.hazelight.se/scripting/structs-refs/",
-		"https://angelscript.hazelight.se/scripting/networking-features/",
-		"https://angelscript.hazelight.se/scripting/delegates/",
-		"https://angelscript.hazelight.se/scripting/mixin-methods/",
-		"https://angelscript.hazelight.se/scripting/gameplaytags/",
-		"https://angelscript.hazelight.se/scripting/editor-script/",
-		"https://angelscript.hazelight.se/scripting/subsystems/",
-		"https://angelscript.hazelight.se/scripting/script-tests/",
-		"https://angelscript.hazelight.se/scripting/cpp-differences/",
-		"https://angelscript.hazelight.se/cpp-bindings/automatic-bindings/",
-		"https://angelscript.hazelight.se/cpp-bindings/mixin-libraries/",
-		"https://angelscript.hazelight.se/cpp-bindings/precompiled-data/",
-		"https://angelscript.hazelight.se/project/development-status/",
-		"https://angelscript.hazelight.se/project/resources/",
-		"https://angelscript.hazelight.se/project/license/",
+		"https://dev.epicgames.com/documentation/en-us/unreal-engine/API/Classes",
 	}
 	//file, err := os.ReadFile("dao/m_content.json")
 	//if err != nil {

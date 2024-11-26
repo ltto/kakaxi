@@ -36,10 +36,6 @@ func OnTLS(accept net.Conn) (err error) {
 }
 
 func TLSHandshake(info *tls.ClientHelloInfo) (ce *tls.Certificate, err error) {
-	switch info.ServerName {
-	case "accounts.google.com":
-		return nil, errors.New("不支持的域名:" + info.ServerName)
-	}
 	dial, err := tls.Dial("tcp", info.ServerName+":443", nil)
 	if err != nil {
 		log.Printf("tls.Dial(%s:443) err:%v\n", info.ServerName, err)
@@ -52,12 +48,12 @@ func TLSHandshake(info *tls.ClientHelloInfo) (ce *tls.Certificate, err error) {
 	}
 	state := dial.ConnectionState()
 	certificates := state.PeerCertificates
-	temp := *certificates[0]
-	return TLSCertificateForTLS(temp, CA)
+	temp := certificates[0]
+	return TLSCertificateForTLS(temp)
 }
 
-func TLSCertificateForTLS(template x509.Certificate, cert *x509.Certificate) (ce *tls.Certificate, err error) {
-	_, pkb, ceb, err := TLSCertificateFor(template, cert)
+func TLSCertificateForTLS(template *x509.Certificate) (ce *tls.Certificate, err error) {
+	_, pkb, ceb, err := TLSCertificateFor(template)
 	if err != nil {
 		log.Printf("TLSCertificateFor err:%v\n", err)
 		return nil, err
@@ -69,12 +65,43 @@ func TLSCertificateForTLS(template x509.Certificate, cert *x509.Certificate) (ce
 	}
 	return &keyPair, err
 }
-func TLSCertificateFor(template x509.Certificate, cert *x509.Certificate) (ce *x509.Certificate, pkb, ceb []byte, err error) {
-	if cert == nil {
-		cert = &template
+
+func TLSCertificateFor(template *x509.Certificate) (ce *x509.Certificate, pkb, ceb []byte, err error) {
+	// 获取域名信息
+	var domain string
+	if len(template.DNSNames) > 0 {
+		// 优先使用 DNSNames 中的第一个域名
+		domain = template.DNSNames[0]
+	} else {
+		// 如果 DNSNames 为空，使用 CommonName
+		domain = template.Subject.CommonName
 	}
+
+	log.Printf("证书域名: %s", domain)
+
+	// 检查域名缓存
+	if domainCert, err := GetOrCreateDomainCert(domain, template.SignatureAlgorithm); err == nil {
+		// 从缓存获取成功
+		keyPair, err := GetKeyPairForAlgorithm(template.SignatureAlgorithm)
+		if err != nil {
+			return nil, nil, nil, err
+		}
+		return domainCert.Cert, keyPair.KeyPEM, domainCert.CertPEM, nil
+	}
+
+	// 如果缓存获取失败，报错
+	return nil, nil, nil, errors.New("证书缓存获取失败")
+}
+
+func TLSCertificateFor1(template *x509.Certificate) (ce *x509.Certificate, pkb, ceb []byte, err error) {
+	cert, err := CreateCertificateWithAlgorithm(template, nil)
+	if err != nil {
+		log.Fatalf("创建证书失败: %v", err)
+	}
+	// 打印证书模板的签名算法
+	log.Printf("证书模板签名算法: %v", template.SignatureAlgorithm)
 	var derBytes []byte
-	derBytes, err = x509.CreateCertificate(rand.Reader, &template, cert, &PK.PublicKey, PK) //DER 格式
+	derBytes, err = x509.CreateCertificate(rand.Reader, template, cert, &PK.PublicKey, PK) //DER 格式
 	if err != nil {
 		log.Printf("x509.CreateCertificate err:%v\n", err)
 		return
